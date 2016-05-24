@@ -66,12 +66,6 @@ io.on("connection", function(socket){
 
     userManager.addUser(socket);
 
-
-    socket.on("next direction", function(direction){
-      userManager.getUser(socket).setDirection(direction);
-    });
-
-
     socket.on('disconnect', function(){
       userManager.deleteUser(socket.id);
     });

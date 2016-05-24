@@ -8,6 +8,6 @@ document.addEventListener("keyup", function(e) {
 socket.on("yolo", function(data){	
 	console.log("coucou toi");
 });
-socket.on("position direction", function(data){
-	champion1.setPosition(data.position, data.direction);
+socket.on("position", function(data){
+	champion1.setPosition(data.position, data.nextDirection);
 });

@@ -1,21 +1,25 @@
 var Champion1 = function(x, y){
 	var position = {x:x,y:x};
+	var positionReceived = {x:x,y:y};
+	var nextDirectionReceived = -1;
+
 	var sprite = new Image();
 	sprite.src = '../images/sprite1.png';
-	var moveLeft = false;
-	var moveTop = false;
-	var moveRight = false;
-	var moveBot = false;
-	var nextDirection = [];
-	var direction;
-	var time, lastTimestamp;
-	var speed = 0.200;
 	var xSprite, ySprite, widthSprite, heightSprite;
 	var columnSprite = 1;
 	var lineSprite = 0;
+	var nextDirection = [];
+	
+	var time = 0, lastTimestamp = 0;
+	var time2 = 0, lastTimestamp2 = 0;
+	var timer = 0;
+	var speed = 0.200;
+
 	this.draw = function(ctx, canvas){
-		
+
 		time = Date.now()-lastTimestamp;
+		if(lastTimestamp == 0)
+			time = 0;
 		switch(nextDirection[0]){
 			case 0:
 				if(Number.isInteger(position.y/60)){
@@ -136,12 +140,146 @@ var Champion1 = function(x, y){
 			default:
 				time = 0;
 				lastTimestamp = 0;
-				columnSprite = 1;
+				//columnSprite = 1;
 			break;
 		}
 		lastTimestamp = Date.now();
 
-		ctx.drawImage(sprite,(192/3)*columnSprite,(256/4)*lineSprite,(192/3),(256/4),position.x,position.y,sizeCell,sizeCell);
+		time2 = Date.now()-lastTimestamp2;
+		if(lastTimestamp2 == 0)
+			time2 = 0;
+		switch(nextDirectionReceived){
+			case 0:
+				if(Number.isInteger(positionReceived.y/60)){
+					positionReceived.x-=speed*time2;
+				}else{
+					if(positionReceived.y/60>Math.round(positionReceived.y/60)){
+						
+						if((positionReceived.y-speed*time2)/60<=Math.round(positionReceived.y/60)){
+							positionReceived.y = Math.round(positionReceived.y/60)*60;
+						}else{
+							positionReceived.y -= speed*time2;
+						}
+						
+					}else{
+						
+						if((positionReceived.y+speed*time2)/60>=Math.round(positionReceived.y/60)){
+							positionReceived.y = Math.round(positionReceived.y/60)*60;
+						}else{
+							positionReceived.y += speed*time2;
+						}
+					}
+				}
+				lineSprite = 1;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					columnSprite++;
+				}
+			break;
+
+			case 1:
+				if(Number.isInteger(positionReceived.x/60)){
+					positionReceived.y-=speed*time2;
+				}else{
+					if(positionReceived.x/60>Math.round(positionReceived.x/60)){
+						
+						if((positionReceived.x-speed*time2)/60<=Math.round(positionReceived.x/60)){
+							positionReceived.x = Math.round(positionReceived.x/60)*60;
+						}else{
+							positionReceived.x -= speed*time2;
+						}
+						
+					}else{
+						
+						if((positionReceived.x+speed*time2)/60>=Math.round(positionReceived.x/60)){
+							positionReceived.x = Math.round(positionReceived.x/60)*60;
+						}else{
+							positionReceived.x += speed*time2;
+						}
+					}
+				}
+				lineSprite = 3;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					columnSprite++;
+				}
+			break;
+
+			case 2:
+				if(Number.isInteger(positionReceived.y/60)){
+					positionReceived.x+=speed*time2;
+				}else{
+					if(positionReceived.y/60>Math.round(positionReceived.y/60)){
+						
+						if((positionReceived.y-speed*time2)/60<=Math.round(positionReceived.y/60)){
+							positionReceived.y = Math.round(positionReceived.y/60)*60;
+						}else{
+							positionReceived.y -= speed*time2;
+						}
+						
+					}else{
+						
+						if((positionReceived.y+speed*time2)/60>=Math.round(positionReceived.y/60)){
+							positionReceived.y = Math.round(positionReceived.y/60)*60;
+						}else{
+							positionReceived.y += speed*time2;
+						}
+					}
+				}
+				lineSprite = 2;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					columnSprite++;
+				}
+			break;
+
+			case 3:
+				if(Number.isInteger(positionReceived.x/60)){
+					positionReceived.y+=speed*time2;
+				}else{
+					if(positionReceived.x/60>Math.round(positionReceived.x/60)){
+						
+						if((positionReceived.x-speed*time2)/60<=Math.round(positionReceived.x/60)){
+							positionReceived.x = Math.round(positionReceived.x/60)*60;
+						}else{
+							positionReceived.x -= speed*time2;
+						}
+						
+					}else{
+						
+						if((positionReceived.x+speed*time2)/60>=Math.round(positionReceived.x/60)){
+							positionReceived.x = Math.round(positionReceived.x/60)*60;
+						}else{
+							positionReceived.x += speed*time2;
+						}
+					}
+				}
+				lineSprite = 0;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					columnSprite++;
+				}
+			break;
+
+			default:
+				time2 = 0;
+				lastTimestamp = 0;
+				columnSprite = 1;
+			break;
+		}
+		lastTimestamp2 = Date.now();
+
+		if(Date.now()-timer > 10){
+			timer = Date.now();
+			socket.emit("position", {position:position,nextDirection:nextDirection[0]});
+		}
+
+		//ctx.drawImage(sprite,(192/3)*columnSprite,(256/4)*lineSprite,(192/3),(256/4),position.x,position.y,sizeCell,sizeCell);
+		ctx.drawImage(sprite,(192/3)*columnSprite,(256/4)*lineSprite,(192/3),(256/4),positionReceived.x,positionReceived.y,sizeCell,sizeCell);
 	}
 	this.onKeyDown = function(e){
 		var key = event.keyCode || event.which;
@@ -151,28 +289,24 @@ var Champion1 = function(x, y){
 			case 37:
 				if(nextDirection.indexOf(0)==-1){
 					nextDirection.push(0);
-					socket.emit("next direction",nextDirection[0]);
 				}
 			break;
 
 			case 38:
 				if(nextDirection.indexOf(1)==-1){
 					nextDirection.push(1);
-					socket.emit("next direction",nextDirection[0]);
 				}
 			break;
 
 			case 39:
 				if(nextDirection.indexOf(2)==-1){
 					nextDirection.push(2);
-					socket.emit("next direction",nextDirection[0]);
 				}
 			break;
 
 			case 40:
 				if(nextDirection.indexOf(3)==-1){
 					nextDirection.push(3);
-					socket.emit("next direction",nextDirection[0]);
 				}
 			break;
 
@@ -188,35 +322,30 @@ var Champion1 = function(x, y){
 			case 37:
 				index = nextDirection.indexOf(0);
 				nextDirection.splice(index, 1);
-				socket.emit("next direction",nextDirection[0]);
 			break;
 
 			case 38:
 				index = nextDirection.indexOf(1);
 				nextDirection.splice(index, 1);
-				socket.emit("next direction",nextDirection[0]);
 			break;
 
 			case 39:
 				index = nextDirection.indexOf(2);	
 				nextDirection.splice(index, 1);
-				socket.emit("next direction",nextDirection[0]);
 			break;
 
 			case 40:
 				index = nextDirection.indexOf(3);
 				nextDirection.splice(index, 1);
-				socket.emit("next direction",nextDirection[0]);
 			break;
 
 			default:
 			break;
 		}
 	}
-	this.setPosition = function(p,d){
-		position = p;
-		direction = d;
-
+	this.setPosition = function(p,nd){
+		positionReceived = p;
+		nextDirectionReceived = nd;
 	}
 
 }
