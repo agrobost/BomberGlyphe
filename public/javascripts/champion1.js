@@ -9,36 +9,139 @@ var Champion1 = function(x, y){
 	var nextDirection = [];
 	var direction;
 	var time, lastTimestamp;
-	var speed = 0.500;
-
+	var speed = 0.200;
+	var xSprite, ySprite, widthSprite, heightSprite;
+	var columnSprite = 1;
+	var lineSprite = 0;
 	this.draw = function(ctx, canvas){
 		
 		time = Date.now()-lastTimestamp;
 		switch(nextDirection[0]){
 			case 0:
-				position.x-=speed*time;
+				if(Number.isInteger(position.y/60)){
+					position.x-=speed*time;
+				}else{
+					if(position.y/60>Math.round(position.y/60)){
+						
+						if((position.y-speed*time)/60<=Math.round(position.y/60)){
+							position.y = Math.round(position.y/60)*60;
+						}else{
+							position.y -= speed*time;
+						}
+						
+					}else{
+						
+						if((position.y+speed*time)/60>=Math.round(position.y/60)){
+							position.y = Math.round(position.y/60)*60;
+						}else{
+							position.y += speed*time;
+						}
+					}
+				}
+				lineSprite = 1;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					columnSprite++;
+				}
 			break;
 
 			case 1:
-				position.y-=speed*time;
+				if(Number.isInteger(position.x/60)){
+					position.y-=speed*time;
+				}else{
+					if(position.x/60>Math.round(position.x/60)){
+						
+						if((position.x-speed*time)/60<=Math.round(position.x/60)){
+							position.x = Math.round(position.x/60)*60;
+						}else{
+							position.x -= speed*time;
+						}
+						
+					}else{
+						
+						if((position.x+speed*time)/60>=Math.round(position.x/60)){
+							position.x = Math.round(position.x/60)*60;
+						}else{
+							position.x += speed*time;
+						}
+					}
+				}
+				lineSprite = 3;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					columnSprite++;
+				}
 			break;
 
 			case 2:
-				position.x+=speed*time;
+				if(Number.isInteger(position.y/60)){
+					position.x+=speed*time;
+				}else{
+					if(position.y/60>Math.round(position.y/60)){
+						
+						if((position.y-speed*time)/60<=Math.round(position.y/60)){
+							position.y = Math.round(position.y/60)*60;
+						}else{
+							position.y -= speed*time;
+						}
+						
+					}else{
+						
+						if((position.y+speed*time)/60>=Math.round(position.y/60)){
+							position.y = Math.round(position.y/60)*60;
+						}else{
+							position.y += speed*time;
+						}
+					}
+				}
+				lineSprite = 2;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					columnSprite++;
+				}
 			break;
 
 			case 3:
-				position.y+=speed*time;
+				if(Number.isInteger(position.x/60)){
+					position.y+=speed*time;
+				}else{
+					if(position.x/60>Math.round(position.x/60)){
+						
+						if((position.x-speed*time)/60<=Math.round(position.x/60)){
+							position.x = Math.round(position.x/60)*60;
+						}else{
+							position.x -= speed*time;
+						}
+						
+					}else{
+						
+						if((position.x+speed*time)/60>=Math.round(position.x/60)){
+							position.x = Math.round(position.x/60)*60;
+						}else{
+							position.x += speed*time;
+						}
+					}
+				}
+				lineSprite = 0;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					columnSprite++;
+				}
 			break;
 
 			default:
 				time = 0;
 				lastTimestamp = 0;
+				columnSprite = 1;
 			break;
 		}
 		lastTimestamp = Date.now();
 
-		ctx.drawImage(sprite,0,0,(192/3),(256/4),position.x,position.y,sizeCell,sizeCell);
+		ctx.drawImage(sprite,(192/3)*columnSprite,(256/4)*lineSprite,(192/3),(256/4),position.x,position.y,sizeCell,sizeCell);
 	}
 	this.onKeyDown = function(e){
 		var key = event.keyCode || event.which;
@@ -113,7 +216,7 @@ var Champion1 = function(x, y){
 	this.setPosition = function(p,d){
 		position = p;
 		direction = d;
-		console.log(p);
+
 	}
 
 }
