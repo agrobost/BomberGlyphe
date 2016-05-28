@@ -12,7 +12,7 @@ var user = function(socket){
 	socket.on("position", function(data){
 		setTimeout(function(){ 
 			socket.emit("position", data); 
-		}, 60);
+		}, 50);
 		
 	});
 
