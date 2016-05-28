@@ -14,6 +14,7 @@ var Champion1 = function(x, y){
 	var time2 = 0, lastTimestamp2 = 0;
 	var timer = 0;
 	var speed = 0.200;
+	var d1 = 0, d2 = 0, d3 = 0, d4 = 0;
 
 	this.draw = function(ctx, canvas){
 
@@ -22,125 +23,104 @@ var Champion1 = function(x, y){
 			time = 0;
 		switch(nextDirection[0]){
 			case 0:
-				if(Number.isInteger(position.y/60)){
+				if(Number.isInteger(position.y/120)){
 					position.x-=speed*time;
 				}else{
-					if(position.y/60>Math.round(position.y/60)){
+					if(position.y/120>Math.round(position.y/120)){
 						
-						if((position.y-speed*time)/60<=Math.round(position.y/60)){
-							position.y = Math.round(position.y/60)*60;
+						if((position.y-speed*time)/120<=Math.round(position.y/120)){
+							position.y = Math.round(position.y/120)*120;
 						}else{
 							position.y -= speed*time;
 						}
 						
 					}else{
 						
-						if((position.y+speed*time)/60>=Math.round(position.y/60)){
-							position.y = Math.round(position.y/60)*60;
+						if((position.y+speed*time)/120>=Math.round(position.y/120)){
+							position.y = Math.round(position.y/120)*120;
 						}else{
 							position.y += speed*time;
 						}
 					}
 				}
-				lineSprite = 1;
-				if(columnSprite==2){
-					columnSprite = 0;
-				}else{
-					columnSprite++;
-				}
+	
 			break;
 
 			case 1:
-				if(Number.isInteger(position.x/60)){
+				if(Number.isInteger(position.x/120)){
 					position.y-=speed*time;
 				}else{
-					if(position.x/60>Math.round(position.x/60)){
+					if(position.x/120>Math.round(position.x/120)){
 						
-						if((position.x-speed*time)/60<=Math.round(position.x/60)){
-							position.x = Math.round(position.x/60)*60;
+						if((position.x-speed*time)/120<=Math.round(position.x/120)){
+							position.x = Math.round(position.x/120)*120;
 						}else{
 							position.x -= speed*time;
 						}
 						
 					}else{
 						
-						if((position.x+speed*time)/60>=Math.round(position.x/60)){
-							position.x = Math.round(position.x/60)*60;
+						if((position.x+speed*time)/120>=Math.round(position.x/120)){
+							position.x = Math.round(position.x/120)*120;
 						}else{
 							position.x += speed*time;
 						}
 					}
 				}
-				lineSprite = 3;
-				if(columnSprite==2){
-					columnSprite = 0;
-				}else{
-					columnSprite++;
-				}
+		
 			break;
 
 			case 2:
-				if(Number.isInteger(position.y/60)){
+				if(Number.isInteger(position.y/120)){
 					position.x+=speed*time;
 				}else{
-					if(position.y/60>Math.round(position.y/60)){
+					if(position.y/120>Math.round(position.y/120)){
 						
-						if((position.y-speed*time)/60<=Math.round(position.y/60)){
-							position.y = Math.round(position.y/60)*60;
+						if((position.y-speed*time)/120<=Math.round(position.y/120)){
+							position.y = Math.round(position.y/120)*120;
 						}else{
 							position.y -= speed*time;
 						}
 						
 					}else{
 						
-						if((position.y+speed*time)/60>=Math.round(position.y/60)){
-							position.y = Math.round(position.y/60)*60;
+						if((position.y+speed*time)/120>=Math.round(position.y/120)){
+							position.y = Math.round(position.y/120)*120;
 						}else{
 							position.y += speed*time;
 						}
 					}
 				}
-				lineSprite = 2;
-				if(columnSprite==2){
-					columnSprite = 0;
-				}else{
-					columnSprite++;
-				}
+	
 			break;
 
 			case 3:
-				if(Number.isInteger(position.x/60)){
+				if(Number.isInteger(position.x/120)){
 					position.y+=speed*time;
 				}else{
-					if(position.x/60>Math.round(position.x/60)){
+					if(position.x/120>Math.round(position.x/120)){
 						
-						if((position.x-speed*time)/60<=Math.round(position.x/60)){
-							position.x = Math.round(position.x/60)*60;
+						if((position.x-speed*time)/120<=Math.round(position.x/120)){
+							position.x = Math.round(position.x/120)*120;
 						}else{
 							position.x -= speed*time;
 						}
 						
 					}else{
 						
-						if((position.x+speed*time)/60>=Math.round(position.x/60)){
-							position.x = Math.round(position.x/60)*60;
+						if((position.x+speed*time)/120>=Math.round(position.x/120)){
+							position.x = Math.round(position.x/120)*120;
 						}else{
 							position.x += speed*time;
 						}
 					}
 				}
-				lineSprite = 0;
-				if(columnSprite==2){
-					columnSprite = 0;
-				}else{
-					columnSprite++;
-				}
+		
 			break;
 
 			default:
 				time = 0;
 				lastTimestamp = 0;
-				//columnSprite = 1;
 			break;
 		}
 		lastTimestamp = Date.now();
@@ -150,118 +130,168 @@ var Champion1 = function(x, y){
 			time2 = 0;
 		switch(nextDirectionReceived){
 			case 0:
-				if(Number.isInteger(positionReceived.y/60)){
-					positionReceived.x-=speed*time2;
+				d2 = 0;
+				d3 = 0;
+				d4 = 0;
+				if(d1 == 0){
+					d1 = speed*time2;
 				}else{
-					if(positionReceived.y/60>Math.round(positionReceived.y/60)){
-						
-						if((positionReceived.y-speed*time2)/60<=Math.round(positionReceived.y/60)){
-							positionReceived.y = Math.round(positionReceived.y/60)*60;
-						}else{
-							positionReceived.y -= speed*time2;
-						}
-						
-					}else{
-						
-						if((positionReceived.y+speed*time2)/60>=Math.round(positionReceived.y/60)){
-							positionReceived.y = Math.round(positionReceived.y/60)*60;
-						}else{
-							positionReceived.y += speed*time2;
-						}
-					}
+					d1 += speed*time2;
 				}
 				lineSprite = 1;
 				if(columnSprite==2){
 					columnSprite = 0;
 				}else{
-					columnSprite++;
+					if(d1>10){
+						columnSprite++;
+						d1 = 0;
+					}
+					
 				}
+				if(Number.isInteger(positionReceived.y/120)){//ou 0 à rajouter
+					positionReceived.x-=speed*time2;
+					break;
+				}
+				if(positionReceived.y/120>Math.round(positionReceived.y/120)){
+					
+					if((positionReceived.y-speed*time2)/120<=Math.round(positionReceived.y/120)){
+						positionReceived.y = Math.round(positionReceived.y/120)*120;
+					}else{
+						positionReceived.y -= speed*time2;
+					}
+					
+				}else{
+					
+					if((positionReceived.y+speed*time2)/120>=Math.round(positionReceived.y/120)){
+						positionReceived.y = Math.round(positionReceived.y/120)*120;
+					}else{
+						positionReceived.y += speed*time2;
+					}
+				}
+				
+
 			break;
 
 			case 1:
-				if(Number.isInteger(positionReceived.x/60)){
+				d1 = 0;
+				d3 = 0;
+				d4 = 0;
+				if(d2 == 0){
+					d2 = speed*time2;
+				}else{
+					d2 += speed*time2;
+				}
+				lineSprite = 3;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					if(d2>10){
+						columnSprite++;
+						d2 = 0;
+					}
+					
+				}
+				if(Number.isInteger(positionReceived.x/120)){
 					positionReceived.y-=speed*time2;
 				}else{
-					if(positionReceived.x/60>Math.round(positionReceived.x/60)){
+					if(positionReceived.x/120>Math.round(positionReceived.x/120)){
 						
-						if((positionReceived.x-speed*time2)/60<=Math.round(positionReceived.x/60)){
-							positionReceived.x = Math.round(positionReceived.x/60)*60;
+						if((positionReceived.x-speed*time2)/120<=Math.round(positionReceived.x/120)){
+							positionReceived.x = Math.round(positionReceived.x/120)*120;
 						}else{
 							positionReceived.x -= speed*time2;
 						}
 						
 					}else{
 						
-						if((positionReceived.x+speed*time2)/60>=Math.round(positionReceived.x/60)){
-							positionReceived.x = Math.round(positionReceived.x/60)*60;
+						if((positionReceived.x+speed*time2)/120>=Math.round(positionReceived.x/120)){
+							positionReceived.x = Math.round(positionReceived.x/120)*120;
 						}else{
 							positionReceived.x += speed*time2;
 						}
 					}
 				}
-				lineSprite = 3;
-				if(columnSprite==2){
-					columnSprite = 0;
-				}else{
-					columnSprite++;
-				}
 			break;
 
 			case 2:
-				if(Number.isInteger(positionReceived.y/60)){
+				d2 = 0;
+				d1 = 0;
+				d4 = 0;
+				if(d3 == 0){
+					d3 = speed*time2;
+				}else{
+					d3 += speed*time2;
+				}
+				lineSprite = 2;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					if(d3>10){
+						columnSprite++;
+						d3 = 0;
+					}
+					
+				}
+				if(Number.isInteger(positionReceived.y/120)){
 					positionReceived.x+=speed*time2;
 				}else{
-					if(positionReceived.y/60>Math.round(positionReceived.y/60)){
+					if(positionReceived.y/120>Math.round(positionReceived.y/120)){
 						
-						if((positionReceived.y-speed*time2)/60<=Math.round(positionReceived.y/60)){
-							positionReceived.y = Math.round(positionReceived.y/60)*60;
+						if((positionReceived.y-speed*time2)/120<=Math.round(positionReceived.y/120)){
+							positionReceived.y = Math.round(positionReceived.y/120)*120;
 						}else{
 							positionReceived.y -= speed*time2;
 						}
 						
 					}else{
 						
-						if((positionReceived.y+speed*time2)/60>=Math.round(positionReceived.y/60)){
-							positionReceived.y = Math.round(positionReceived.y/60)*60;
+						if((positionReceived.y+speed*time2)/120>=Math.round(positionReceived.y/120)){
+							positionReceived.y = Math.round(positionReceived.y/120)*120;
 						}else{
 							positionReceived.y += speed*time2;
 						}
 					}
 				}
-				lineSprite = 2;
-				if(columnSprite==2){
-					columnSprite = 0;
-				}else{
-					columnSprite++;
-				}
 			break;
 
 			case 3:
-				if(Number.isInteger(positionReceived.x/60)){
+				d2 = 0;
+				d1 = 0;
+				d3 = 0;
+				if(d4 == 0){
+					d4 = speed*time2;
+				}else{
+					d4 += speed*time2;
+				}
+				lineSprite = 0;
+				if(columnSprite==2){
+					columnSprite = 0;
+				}else{
+					if(d4>10){
+						columnSprite++;
+						d4 = 0;
+					}
+					
+				}
+				if(Number.isInteger(positionReceived.x/120)){
 					positionReceived.y+=speed*time2;
 				}else{
-					if(positionReceived.x/60>Math.round(positionReceived.x/60)){
+					if(positionReceived.x/120>Math.round(positionReceived.x/120)){
 						
-						if((positionReceived.x-speed*time2)/60<=Math.round(positionReceived.x/60)){
-							positionReceived.x = Math.round(positionReceived.x/60)*60;
+						if((positionReceived.x-speed*time2)/120<=Math.round(positionReceived.x/120)){
+							positionReceived.x = Math.round(positionReceived.x/120)*120;
 						}else{
 							positionReceived.x -= speed*time2;
 						}
 						
 					}else{
 						
-						if((positionReceived.x+speed*time2)/60>=Math.round(positionReceived.x/60)){
-							positionReceived.x = Math.round(positionReceived.x/60)*60;
+						if((positionReceived.x+speed*time2)/120>=Math.round(positionReceived.x/120)){
+							positionReceived.x = Math.round(positionReceived.x/120)*120;
 						}else{
 							positionReceived.x += speed*time2;
 						}
 					}
-				}
-				lineSprite = 0;
-				if(columnSprite==2){
-					columnSprite = 0;
-				}else{
-					columnSprite++;
 				}
 			break;
 
@@ -269,11 +299,17 @@ var Champion1 = function(x, y){
 				time2 = 0;
 				lastTimestamp = 0;
 				columnSprite = 1;
+				if(lineSprite == 1 || lineSprite == 2)
+					columnSprite = 2;
+				d1 = 0;
+				d2 = 0;
+				d3 = 0;
+				d4 = 0;
 			break;
 		}
 		lastTimestamp2 = Date.now();
 
-		if(Date.now()-timer > 10){
+		if(Date.now()-timer > 5){
 			timer = Date.now();
 			socket.emit("position", {position:position,nextDirection:nextDirection[0]});
 		}
@@ -347,5 +383,6 @@ var Champion1 = function(x, y){
 		positionReceived = p;
 		nextDirectionReceived = nd;
 	}
+
 
 }
