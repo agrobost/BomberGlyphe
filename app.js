@@ -7,12 +7,17 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var userManager = require("./game_server/userManager.js");
+
 
 
 var app = express();
 var io = socket_io();
 app.io = io;
+var GameManager = require("./game_server/gameManager.js");
+var UserManager = require("./game_server/userManager.js");
+
+var gameManager = new GameManager(io);
+var userManager = new UserManager(io, gameManager);
 
 
 
@@ -63,12 +68,13 @@ app.use(function(err, req, res, next) {
 
 
 io.on("connection", function(socket){
-
-    userManager.addUser(socket);
-
-    socket.on('disconnect', function(){
-      userManager.deleteUser(socket.id);
-    });
+  socket.on("client sends pseudo to server", function(pseudo){
+    userManager.addUser(socket, pseudo);
+  });  
+  //gameManager.addUser(userManager.getUser(socket));
+  socket.on('disconnect', function(){
+    userManager.deleteUser(socket.id);
+  });
 });
 
 module.exports = app;

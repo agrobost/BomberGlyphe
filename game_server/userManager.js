@@ -1,12 +1,13 @@
 "use strict";
 var User = require("./user.js");
-var userManager = function(){
+var userManager = function(sio, gm){
 	
+	var io = sio;
+	var gameManager = gm;
 	var users = {};
 
-	this.addUser = function(socket){
-		users[socket] = new User(socket);
-		console.log("Un utilisateur viens de se connecter");
+	this.addUser = function(socket, pseudo){
+		users[socket] = new User(socket, pseudo, gm);	
 	};
 
 	this.deleteUser = function(socket){
@@ -20,4 +21,4 @@ var userManager = function(){
 };
 
 
-module.exports = new userManager();
+module.exports = userManager;
