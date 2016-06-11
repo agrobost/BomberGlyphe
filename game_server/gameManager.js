@@ -8,20 +8,15 @@ var gameManager = function(io){
 	var gamesClassic = {};
 
 	this.joinClassicGame = function(user){
-
 		for(var id in gamesClassic){
-			if(!gamesClassic[id].isFilled()){
-				user.getSocket().join(id);
-				gamesClassic[id].addPlayer(user);				
+			if(gamesClassic[id].addPlayer(user)){				
 				return;
 			}
 		}
 
 		var refGame = createRef();
 		gamesClassic[refGame] = new GameClassic(io, refGame);
-		user.getSocket().join(refGame);
-		gamesClassic[refGame].addPlayer(user);
-		
+		gamesClassic[refGame].addPlayer(user);		
 	};
 	
 

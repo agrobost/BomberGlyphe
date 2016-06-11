@@ -9,26 +9,32 @@ socket.on("server sends game env to client", function(environment){
 	requestAnimationFrame(draw);
 });
 socket.on("space down", function(data){
-	console.log(data.i+"/"+data.j+"/"+data.value);
 	env.map[data.i][data.j] = data.value;
 })
-socket.on("position", function(data){
-	//console.log(JSON.stringify(data, null, 4));
-	if(champions[data.id]!=undefined)	
-		champions[data.id].setPosition(data.position, data.direction);		
-});
+
 socket.on('a player disconnects', function(id){
 	delete champions[id];
 });
-socket.on('initialize champion', function(data){//data=> {id:user.getSocket().id,vie:vie, mana:mana, speed:speed, position:position};
-	champions[data.id] = new Champion1(data.speed, data.position);
-	if(sessionStorage.id == data.id){
-		deplacement.init(data.position, data.speed);	
+socket.on('initialize champion', function(data){//data=> {id:user.getSocket().id,health:health, mana:mana, speed:speed, position:position};
+	champions[data.id] = new Character(data.speed, data.position, data.health, data.mana);
+});
+socket.on('update champion',function(data){	
+	for(var ref in data){
+		if(ref == "id"){
+			continue;
+		}
+		if(ref == "nextDirection"){
+			champions[data.id]["movementCharacter"]["nextDirection"] = data["nextDirection"];
+			continue;
+		}
+		if(ref == "hasBeenChanged"){
+			champions[data.id]["movementCharacter"]["hasBeenChanged"] = data["hasBeenChanged"];
+			continue;			
+		}
+		champions[data.id][ref] = data[ref];
 	}
 });
 
-
-var down = {};
 
 $(document).keydown(function(e){
 	deplacement.keyDown(e);

@@ -1,9 +1,6 @@
 "use strict";
 
 var socket = io();
-
-
-
 var canvas = document.getElementById("canvas");	
 var ctx = canvas.getContext("2d");
 
@@ -16,13 +13,17 @@ bois.src = '../images/bois.png';
 var bombe = new Image();
 bombe.src = '../images/bombe.png';
 
-var env;
+var env;//object assign
 var deplacement = new deplacement();
+var time = {last:0,now:0};
 
 
 
+function draw(timestamp){
+	time.last = time.now;
+	time.now = timestamp;
+	time.diff = time.now - time.last;	
 
-function draw(timestamp){	
 	var i,j;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -51,10 +52,12 @@ function draw(timestamp){
 			}			
 		}
 	}
-
-	champions[sessionStorage.id].showCurrentCell(ctx, canvas);
+	if(champions[sessionStorage.id]!=undefined){
+		champions[sessionStorage.id].showCurrentCell(ctx, canvas);
+	}
+	
 	for (var idSocket in champions) {
-		champions[idSocket].draw(ctx, canvas);
+		champions[idSocket].draw(ctx, canvas, time.diff);
 	}
 
 	requestAnimationFrame(draw);	

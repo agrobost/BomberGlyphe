@@ -71,8 +71,9 @@ io.on("connection", function(socket){
   socket.on("client sends pseudo to server", function(pseudo){
     userManager.addUser(socket, pseudo);
   });  
-  //gameManager.addUser(userManager.getUser(socket));
+
   socket.on('disconnect', function(){
+    console.log(socket.id);
     userManager.deleteUser(socket.id);
   });
 });

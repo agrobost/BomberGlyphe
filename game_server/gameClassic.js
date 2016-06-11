@@ -3,28 +3,34 @@ var Personnage = require("./personnage.js");
 
 var gameClassic = function(io, refGame){
 
-	var filled = false;
 	var io = io;
 	var refGame = refGame;
-	var players = {};
+	this.players = {};
 	this.env = createEnvironment();
 	var that = this;
 	
 	this.addPlayer = function(user){
-		user.getSocket().emit("server sends game env to client", this.env);
- 
-		players[user.getSocket().id] = new Personnage(user, io, refGame, that);		
-
-		for(var id in players){
-			user.getSocket().emit("initialize champion", players[id].toObject());
+		if(Object.keys(this.players).length > 6){
+			return false;
 		}
-		user.getSocket().broadcast.to(refGame).emit('initialize champion', players[user.getSocket().id].toObject());		
+		user.getSocket().join(refGame);
+		user.getSocket().emit("server sends game env to client", this.env);
+		user.game = that;
+ 
+		this.players[user.getSocket().id] = new Personnage(user, io, refGame, that);		
 
-		user.getSocket().on('disconnect', function(){
-			delete players[user.getSocket().id];
-			io.sockets.in(refGame).emit('a player disconnects', user.getSocket().id);	
-		});
+		for(var id in this.players){
+			user.getSocket().emit("initialize champion", this.players[id].toObject());
+		}
+		user.getSocket().broadcast.to(refGame).emit('initialize champion', this.players[user.getSocket().id].toObject());		
 
+		return true;
+	};
+
+	this.deletePlayer = function(idSocket){
+		this.players[idSocket].stopInterval();
+		delete this.players[idSocket];
+		io.sockets.in(refGame).emit('a player disconnects', idSocket);	
 	};
 
 
@@ -52,9 +58,7 @@ var gameClassic = function(io, refGame){
 		map[5][3] = 0;
 		return {map:map,numberColumn:numberColumn, numberLine:numberLine, sizeCell:sizeCell};
 	};
-	this.isFilled = function(){
-		return filled;
-	}
+
 
 };
 

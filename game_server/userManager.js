@@ -7,16 +7,17 @@ var userManager = function(sio, gm){
 	var users = {};
 
 	this.addUser = function(socket, pseudo){
-		users[socket] = new User(socket, pseudo, gm);	
+		users[socket.id] = new User(socket, pseudo, gm);	
 	};
 
-	this.deleteUser = function(socket){
-		delete users[socket];
+	this.deleteUser = function(idSocket){
+		users[idSocket].disconnect();
+		delete users[idSocket];
 		console.log("Un utilisateur viens de se déconnecter");
 	};
 
-	this.getUser = function(socket){
-		return users[socket];
+	this.getUser = function(idSocket){
+		return users[idSocket];
 	};
 };
 
