@@ -20,7 +20,6 @@ var gameManager = new GameManager(io);
 var userManager = new UserManager(io, gameManager);
 
 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -71,9 +70,8 @@ io.on("connection", function(socket){
   socket.on("client sends pseudo to server", function(pseudo){
     userManager.addUser(socket, pseudo);
   });  
-
   socket.on('disconnect', function(){
-    console.log(socket.id);
+    console.log("le client est déconnecté");
     userManager.deleteUser(socket.id);
   });
 });

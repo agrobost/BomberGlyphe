@@ -1,63 +1,57 @@
 "use strict";
 var Personnage = require("./personnage.js");
+var BombManager = require("./bombManager.js");
+var Environment = require("./environment.js");
 
 var gameClassic = function(io, refGame){
 
 	var io = io;
 	var refGame = refGame;
 	this.players = {};
-	this.env = createEnvironment();
+	this.env = new Environment();
+	this.bombManager = new BombManager();
+	this.timerPing;
 	var that = this;
 	
 	this.addPlayer = function(user){
 		if(Object.keys(this.players).length > 6){
 			return false;
 		}
-		user.getSocket().join(refGame);
-		user.getSocket().emit("server sends game env to client", this.env);
+		user.socket.join(refGame);
+
+		this.env.emitTo(user);
+
 		user.game = that;
- 
-		this.players[user.getSocket().id] = new Personnage(user, io, refGame, that);		
+
+		this.players[user.socket.id] = new Personnage(user, io, refGame, that);		
 
 		for(var id in this.players){
-			user.getSocket().emit("initialize champion", this.players[id].toObject());
+			user.socket.emit("initialize champion", this.players[id].toObject());
 		}
-		user.getSocket().broadcast.to(refGame).emit('initialize champion', this.players[user.getSocket().id].toObject());		
+		user.socket.broadcast.to(refGame).emit('initialize champion', this.players[user.socket.id].toObject());
+
+
+		this.timerPing = setInterval(function(){
+			user.pinguer();
+			user.socket.emit("pinguage");
+		},1000);
+
+		user.socket.on("ponguage", function(fps){
+			user.ponguer();
+			user.fps = fps;
+			io.sockets.in(refGame).emit('ping fps', {fps:user.fps,ping:user.ping});
+		});
 
 		return true;
 	};
 
 	this.deletePlayer = function(idSocket){
+		clearInterval(this.timerPing);
 		this.players[idSocket].stopInterval();
 		delete this.players[idSocket];
 		io.sockets.in(refGame).emit('a player disconnects', idSocket);	
 	};
 
-
-
-	function createEnvironment(){
-		var i, j;
-		var map = [];
-		var numberColumn = 30;
-		var numberLine = 8;
-		var sizeCell = 65;
-
-		for(i=0;i<numberColumn;i++){
-			map[i] = [];
-			for(j=0;j<numberLine;j++){
-				var random = Math.random();
-				if(random<0.33/4){
-					map[i][j] = 2;
-				}else if(random<0.66/4){
-					map[i][j] = 3;
-				}else{
-					map[i][j] = 0;
-				}
-			}
-		}
-		map[5][3] = 0;
-		return {map:map,numberColumn:numberColumn, numberLine:numberLine, sizeCell:sizeCell};
-	};
 
 
 };

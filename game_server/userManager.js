@@ -1,25 +1,37 @@
-"use strict";
 var User = require("./user.js");
-var userManager = function(sio, gm){
+
+
+module.exports = UserManager;
+
+function UserManager(io, gameManager){
 	
-	var io = sio;
-	var gameManager = gm;
-	var users = {};
+	/*singleton*/
+	if (arguments.callee._singletonInstance) {
+		return arguments.callee._singletonInstance;
+	}
+	arguments.callee._singletonInstance = this;
+
+
+	this.io = io;
+	this.gameManager = gameManager;
+	this.users = {};
+
+	/*pas besoin de prototype car 1 seul obj UserManager sera créé*/
 
 	this.addUser = function(socket, pseudo){
-		users[socket.id] = new User(socket, pseudo, gm);	
+		this.users[socket.id] = new User(socket, pseudo, gameManager, this.io);
 	};
 
 	this.deleteUser = function(idSocket){
-		users[idSocket].disconnect();
-		delete users[idSocket];
+		this.users[idSocket].disconnect();
+		delete this.users[idSocket];
 		console.log("Un utilisateur viens de se déconnecter");
 	};
 
 	this.getUser = function(idSocket){
-		return users[idSocket];
+		return this.users[idSocket];
 	};
 };
 
 
-module.exports = userManager;
+

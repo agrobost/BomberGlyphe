@@ -1,20 +1,17 @@
 var mouvementCharacter = function(personnage){
 
-	this.personnage = personnage;
-	
-	//this.lastPosition = {x:personnage.position.x, y:personnage.position.y};
-	//this.lastValueCell = 0;
-	var that = this;
+	this.personnage = personnage;	
 	var position = this.personnage.position;
 	var nextDirection = -1;
-	var frequence = 20;
+	var frequence = 10;
 	var speed = this.personnage.speed;
 	var env = this.personnage.gameClassic.env;
 	var futurPosition, x, roundX, signe, max, realDistance;
 	var hasBeenChanged;
+	var that = this;
 
 	/**********          ENVOIE POSISTION DU CLIENT EN FONCTION DES TOUCHE FLéché APPUYé          **********/
-	setInterval(function(){		
+	var timer = setInterval(function(){		
 		
 		futurPosition = Object.assign({},position);
 		switch(nextDirection){
@@ -75,49 +72,55 @@ var mouvementCharacter = function(personnage){
 		}
 
 
+		//console.log(futurPosition);
 		var left = {x:Math.round((futurPosition.x-env.sizeCell)/env.sizeCell),y:Math.round((futurPosition.y-env.sizeCell/2)/env.sizeCell)};
 		var top = {x:Math.round((futurPosition.x-env.sizeCell/2)/env.sizeCell),y:Math.round((futurPosition.y-env.sizeCell)/env.sizeCell)};
 		var right = {x:Math.round((futurPosition.x)/env.sizeCell),y:Math.round((futurPosition.y-env.sizeCell/2)/env.sizeCell)};
 		var bot = {x:Math.round((futurPosition.x-env.sizeCell/2)/env.sizeCell),y:Math.round((futurPosition.y)/env.sizeCell)};
-		var leftCell = env.map[left.x][left.y];
-		var topCell = env.map[top.x][top.y];
-		var rightCell = env.map[right.x][right.y];
-		var botCell = env.map[bot.x][bot.y];
+		//console.log(bot);
+		var leftCell = env.cellBelongToMap(left) ? env.map[left.x][left.y]["type"] : undefined;
+		var topCell = env.cellBelongToMap(top) ? env.map[top.x][top.y]["type"] : undefined;
+		var rightCell = env.cellBelongToMap(right) ? env.map[right.x][right.y]["type"] : undefined;
+		var botCell = env.cellBelongToMap(bot) ? env.map[bot.x][bot.y]["type"] : undefined;
 
-		var currentCell = env.map[Math.round((position.x-env.sizeCell/2)/env.sizeCell)][Math.round((position.y-env.sizeCell/2)/env.sizeCell)];
+		var currentCell = env.map[Math.round((position.x-env.sizeCell/2)/env.sizeCell)][Math.round((position.y-env.sizeCell/2)/env.sizeCell)]["type"];
 
-		if(nextDirection == 37 && (leftCell === 0 || leftCell === currentCell)){
+		if(nextDirection == 37 && (leftCell === "empty" || leftCell === currentCell)){
 			position.x = futurPosition.x;
 			position.y = futurPosition.y;
+			that.personnage.orientation = 37;
 			hasBeenChanged = true;
-		}else if(nextDirection == 38 && (topCell === 0 || topCell === currentCell)){
+		}else if(nextDirection == 38 && (topCell === "empty" || topCell === currentCell)){
 			position.x = futurPosition.x;
 			position.y = futurPosition.y;
+			that.personnage.orientation = 38;
 			hasBeenChanged = true;
-		}else if(nextDirection == 39 && (rightCell === 0 || rightCell === currentCell)){
+		}else if(nextDirection == 39 && (rightCell === "empty" || rightCell === currentCell)){
 			position.x = futurPosition.x;
 			position.y = futurPosition.y;
+			that.personnage.orientation = 39;
 			hasBeenChanged = true;
-		}else if(nextDirection == 40 && (botCell === 0 || botCell === currentCell)){
+		}else if(nextDirection == 40 && (botCell === "empty" || botCell === currentCell)){
 			position.x = futurPosition.x;
 			position.y = futurPosition.y;
+			that.personnage.orientation = 40;
 			hasBeenChanged = true;
 		}else{
 			hasBeenChanged = false;
 		}
 		
-		
-
-	
-
-		personnage.user.getSocket().emit("update champion", {id:personnage.user.getSocket().id,position:position, nextDirection:nextDirection, hasBeenChanged:hasBeenChanged});
+		that.personnage.io.sockets.in(that.personnage.refGame).emit("update champion", {id:that.personnage.user.socket.id,position:position, nextDirection:nextDirection, hasBeenChanged:hasBeenChanged});
 
 	}, frequence);
 
 	/**********          RECEPTION DE LA DIRECTION A PRENDRE         **********/
-	personnage.user.getSocket().on("next direction", function(nd){
+	that.personnage.user.socket.on("next direction", function(nd){
 		nextDirection = nd;
 	});
+
+	this.stopInterval = function(){
+		clearInterval(timer);
+	};
 }
 
 module.exports = mouvementCharacter;

@@ -3,14 +3,22 @@ socket.on('connect', function(){
 	var pseudo = prompt("Entrez votre pseudo");
 	socket.emit("client sends pseudo to server", pseudo);
 	socket.emit('client want find a classic game');
+
 });
 socket.on("server sends game env to client", function(environment){
 	env = environment;
 	requestAnimationFrame(draw);
 });
-socket.on("space down", function(data){
+socket.on("modify cell", function(data){
 	env.map[data.i][data.j] = data.value;
-})
+});
+socket.on("explosion bomb", function(data){//{x:x,y:y}
+	animations.push(new ExplosionBombe(data));
+});
+socket.on('sound explosion bomb', function(){
+	ExplosionBombe.playSound();
+});
+
 
 socket.on('a player disconnects', function(id){
 	delete champions[id];
@@ -35,6 +43,15 @@ socket.on('update champion',function(data){
 	}
 });
 
+socket.on('pinguage', function(){
+	var rate = fps.nb/(Date.now()-fps.init)*1000;
+	fps.init = 0;
+	fps.nb = 0;
+	socket.emit("ponguage", rate);
+});
+socket.on('ping fps', function(data){//{id:socket.id,fps:fps, ping:ping};
+	console.log("fps:"+data.fps+", ping:"+data.ping);
+});
 
 $(document).keydown(function(e){
 	deplacement.keyDown(e);

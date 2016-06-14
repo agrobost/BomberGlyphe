@@ -1,10 +1,39 @@
-#canvas{
-	width: 100%;
+html {
 	height: 100%;
-	margin: 0px;
 }
-#div_canvas{
-	width:1600px;
-	height:450px;
-	margin: 0 auto;
+body {
+	margin:0;
+}
+#container {
+	margin: auto;
+}
+#canvas {
+	width: 100%;
+}
+#spell {
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+
+}
+.champion_infos {
+	background-image: url(../images/caractChampion.png);
+	background-size: 100% 100%;
+	width:12.5%;
+	display: inline-block;
+	vertical-align: top;
+	margin:0px;
+	padding: 0px;
+
+}
+
+.box_spell {
+	width:6.25%;
+	display: inline-block;
+	vertical-align: top;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border: 2px solid black;*/
 }

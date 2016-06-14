@@ -1,38 +1,41 @@
-"use strict";
-
 var GameClassic = require("./gameClassic.js");
 
+module.exports = GameManager;
 
-var gameManager = function(io){	
+function GameManager(io){	
 
-	var gamesClassic = {};
+	/*singleton*/
+	if (arguments.callee._singletonInstance) {
+		return arguments.callee._singletonInstance;
+	}
+	arguments.callee._singletonInstance = this;
+
+	this.gamesClassic = {};
+	this.io = io;
 
 	this.joinClassicGame = function(user){
-		for(var id in gamesClassic){
-			if(gamesClassic[id].addPlayer(user)){				
+		for(var id in this.gamesClassic){
+			if(this.gamesClassic[id].addPlayer(user)){				
 				return;
 			}
 		}
 
-		var refGame = createRef();
-		gamesClassic[refGame] = new GameClassic(io, refGame);
-		gamesClassic[refGame].addPlayer(user);		
+		var refGame = this.createRef();
+		this.gamesClassic[refGame] = new GameClassic(io, refGame);
+		this.gamesClassic[refGame].addPlayer(user);		
 	};
 	
 
-	function createRef(){
+	this.createRef = function(){
 		do{
 			var text = "";
 			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-			for( var i=0; i < 15; i++ )
+			for( var i=0; i < 6; i++ )
 				text += possible.charAt(Math.floor(Math.random() * possible.length));
-		}while(gamesClassic[text]!=undefined);
+		}while(this.gamesClassic[text]!=undefined);
 
 		return text;
 	}
-
-
 };
 
 
-module.exports = gameManager;

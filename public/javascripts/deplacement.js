@@ -4,7 +4,6 @@ var deplacement = function(){
 	var down = {};
 
 	this.sendNextDirection = function(){
-		console.log("yep"+nextDirection[0]);
 		socket.emit("next direction", nextDirection[0]);
 	};
 

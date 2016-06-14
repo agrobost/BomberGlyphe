@@ -1,21 +1,35 @@
 <!doctype html>
-<html ng-app>
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="all"/>
-  </head>
-  <body>
-    <div id="div_canvas">
-      <canvas id="canvas" width="1920" height="540"></canvas>
-    </div>
-    <script src="javascripts/requestAnimationFrame.js"></script>
-    <script src="javascripts/movementCharacter.js"></script>
-    <script src="javascripts/deplacement.js"></script>
-    <script src="javascripts/character.js"></script>
-    <script src="javascripts/bomber_glyphe.js"></script>
-    <script src="javascripts/controller.js"></script>
-  </body>
-  </body>
+<html id="head" ng-app>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="all"/>
+</head>
+<body>
+	<div id="container">
+		<canvas id="canvas" width="1920" height="1000"></canvas>
+		<div id="spell">
+			<div class="champion_infos"></div
+			><div class="champion_infos"></div
+			><div class="champion_infos"></div
+			><div class="box_spell">spell1</div
+			><div class="box_spell">spell2</div
+			><div class="box_spell">spell3</div
+			><div class="box_spell">spell4</div
+			><div class="champion_infos"></div
+			><div class="champion_infos"></div
+			><div class="champion_infos"></div>
+		</div>
+	</div>
+
+	<script src="javascripts/requestAnimationFrame.js"></script>
+	<script src="javascripts/explosionBomb.js"></script>
+	<script src="javascripts/movementCharacter.js"></script>
+	<script src="javascripts/deplacement.js"></script>
+	<script src="javascripts/character.js"></script>
+	<script src="javascripts/bomber_glyphe.js"></script>
+	<script src="javascripts/controller.js"></script>
+
+</body>
 </html>

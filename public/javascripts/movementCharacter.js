@@ -13,7 +13,6 @@ MovementCharacter.prototype.update = function(time){
 	var x, roundX, signe, max, realDistance;
 	var character = this.character;
 	var step = this.step;//plus court, step obj
-	var futurPosition = Object.assign({},character.position);
 
 	switch(this.nextDirection){
 
@@ -93,52 +92,52 @@ MovementCharacter.prototype.update = function(time){
 			x = (character.position.y-env.sizeCell/2)/env.sizeCell;
 			roundX = Math.round(x);
 			if(x == roundX){
-				futurPosition.x -= character.speed*time
+				character.x -= character.speed*time
 				break;
 			}
 			signe = (roundX-x)/Math.abs(roundX-x);			
 			max = (roundX*env.sizeCell)-character.position.y+env.sizeCell/2;
 			realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
-			futurPosition.y += realDistance;			
+			character.y += realDistance;			
 			break;
 
 			case 38:
 			x = (character.position.x-env.sizeCell/2)/env.sizeCell;
 			roundX = Math.round(x);
 			if(x == roundX){
-				futurPosition.y -= character.speed*time
+				character.y -= character.speed*time
 				break;
 			}
 			signe = (roundX-x)/Math.abs(roundX-x);			
 			max = (roundX*env.sizeCell)-character.position.x+env.sizeCell/2;
 			realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
-			futurPosition.x += realDistance;
+			character.x += realDistance;
 			break;
 
 			case 39:			
 			x = (character.position.y-env.sizeCell/2)/env.sizeCell;
 			roundX = Math.round(x);
 			if(x == roundX){
-				futurPosition.x += character.speed*time;
+				character.x += character.speed*time;
 				break;
 			}
 			signe = (roundX-x)/Math.abs(roundX-x);			
 			max = (roundX*env.sizeCell)-character.position.y+env.sizeCell/2;
 			realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
-			futurPosition.y += realDistance;
+			character.y += realDistance;
 			break;
 
 			case 40:
 			x = (character.position.x-env.sizeCell/2)/env.sizeCell;
 			roundX = Math.round(x);
 			if(x == roundX){
-				futurPosition.y += character.speed*time
+				character.y += character.speed*time
 				break;
 			}
 			signe = (roundX-x)/Math.abs(roundX-x);			
 			max = (roundX*env.sizeCell)-character.position.x+env.sizeCell/2;
 			realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
-			futurPosition.x += realDistance;
+			character.x += realDistance;
 			break;
 
 
@@ -146,29 +145,5 @@ MovementCharacter.prototype.update = function(time){
 			break;
 		}
 
-		var left = {x:Math.round((futurPosition.x-env.sizeCell)/env.sizeCell),y:Math.round((futurPosition.y-env.sizeCell/2)/env.sizeCell)};
-		var top = {x:Math.round((futurPosition.x-env.sizeCell/2)/env.sizeCell),y:Math.round((futurPosition.y-env.sizeCell)/env.sizeCell)};
-		var right = {x:Math.round((futurPosition.x)/env.sizeCell),y:Math.round((futurPosition.y-env.sizeCell/2)/env.sizeCell)};
-		var bot = {x:Math.round((futurPosition.x-env.sizeCell/2)/env.sizeCell),y:Math.round((futurPosition.y)/env.sizeCell)};
-		var leftCell = env.map[left.x][left.y];
-		var topCell = env.map[top.x][top.y];
-		var rightCell = env.map[right.x][right.y];
-		var botCell = env.map[bot.x][bot.y];
-		var currentCell = env.map[Math.round((character.position.x-env.sizeCell/2)/env.sizeCell)][Math.round((character.position.y-env.sizeCell/2)/env.sizeCell)];
-
-		if(this.nextDirection == 37 && (leftCell === 0 || leftCell === currentCell)){
-			character.position.x = futurPosition.x;
-			character.position.y = futurPosition.y;
-		}else if(this.nextDirection == 38 && (topCell === 0 || topCell === currentCell)){
-			character.position.x = futurPosition.x;
-			character.position.y = futurPosition.y;
-
-		}else if(this.nextDirection == 39 && (rightCell === 0 || rightCell === currentCell)){
-			character.position.x = futurPosition.x;
-			character.position.y = futurPosition.y;
-		}else if(this.nextDirection == 40 && (botCell === 0 || botCell === currentCell)){
-			character.position.x = futurPosition.x;
-			character.position.y = futurPosition.y;
-		}
 	}	
 };

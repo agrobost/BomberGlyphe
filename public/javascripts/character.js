@@ -4,9 +4,11 @@ function Character(_speed, _position, _health, _mana){
 	this.health = _health;
 	this.mana = _mana;
 	this.movementCharacter = new MovementCharacter(this);
+	
 }
 Character.sprite = new Image();
 Character.sprite.src = '../images/sprite1.png';
+
 Character.prototype.showCurrentCell = function(ctx, canvas){
 	var coord = {x:Math.round((this.position.x-env.sizeCell/2)/env.sizeCell),y:Math.round((this.position.y-env.sizeCell/2)/env.sizeCell)};
 	ctx.beginPath();
@@ -20,13 +22,23 @@ Character.prototype.draw = function(ctx, canvas, time){
 	this.movementCharacter.update(time);	
 	ctx.drawImage(Character.sprite,(192/3)*this.movementCharacter.columnSprite,(256/4)*this.movementCharacter.lineSprite,(192/3),(256/4),this.position.x-env.sizeCell/2,this.position.y-env.sizeCell/2,env.sizeCell,env.sizeCell);
 
-	ctx.fillStyle="#ccddff";
-	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-env.sizeCell/8,env.sizeCell,env.sizeCell/8);
-	ctx.fillStyle="#003399";
-	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-env.sizeCell/8,env.sizeCell*this.mana.current/this.mana.max,env.sizeCell/8);
 
-	ctx.fillStyle="#ccffcc";
-	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-2*env.sizeCell/8,env.sizeCell,env.sizeCell/8);
-	ctx.fillStyle="#003300";
-	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-2*env.sizeCell/8,env.sizeCell*this.health.current/this.health.max,env.sizeCell/8);
+	ctx.fillStyle="#262626";
+	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-2*env.sizeCell/7,env.sizeCell,env.sizeCell/8);
+	ctx.fillStyle="#33cc33";
+	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-2*env.sizeCell/7,env.sizeCell*this.health.current/this.health.max,env.sizeCell/8);
+
+	ctx.fillStyle="#262626";
+	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-env.sizeCell/7,env.sizeCell,env.sizeCell/8);
+	ctx.fillStyle="#0099ff";
+	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-env.sizeCell/7,env.sizeCell*this.mana.current/this.mana.max,env.sizeCell/8);
+
+
+
+
+	ctx.font = "12px Arial";
+	ctx.fillStyle = "white";
+	ctx.textAlign = "center";
+	ctx.fillText(this.health.current+"/"+this.health.max,this.position.x,this.position.y-env.sizeCell/2-env.sizeCell/7);
+	ctx.fillText(this.mana.current+"/"+this.mana.max,this.position.x,this.position.y-env.sizeCell/2);
 };
