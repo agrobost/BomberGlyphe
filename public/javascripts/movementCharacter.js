@@ -9,11 +9,9 @@ function MovementCharacter(_character){
 
 
 MovementCharacter.prototype.update = function(time){
-	
 	var x, roundX, signe, max, realDistance;
 	var character = this.character;
 	var step = this.step;//plus court, step obj
-
 	switch(this.nextDirection){
 
 		case 37:
@@ -82,68 +80,67 @@ MovementCharacter.prototype.update = function(time){
 		step.left = step.top = step.right = step.bot = 0;
 		break;
 
+	}	
+	
+	if(!this.hasBeenChanged)
+		return;
 
-		if(!this.hasBeenChanged)
-			return;
-
-
-		switch(this.nextDirection){
-			case 37:
-			x = (character.position.y-env.sizeCell/2)/env.sizeCell;
-			roundX = Math.round(x);
-			if(x == roundX){
-				character.x -= character.speed*time
-				break;
-			}
-			signe = (roundX-x)/Math.abs(roundX-x);			
-			max = (roundX*env.sizeCell)-character.position.y+env.sizeCell/2;
-			realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
-			character.y += realDistance;			
-			break;
-
-			case 38:
-			x = (character.position.x-env.sizeCell/2)/env.sizeCell;
-			roundX = Math.round(x);
-			if(x == roundX){
-				character.y -= character.speed*time
-				break;
-			}
-			signe = (roundX-x)/Math.abs(roundX-x);			
-			max = (roundX*env.sizeCell)-character.position.x+env.sizeCell/2;
-			realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
-			character.x += realDistance;
-			break;
-
-			case 39:			
-			x = (character.position.y-env.sizeCell/2)/env.sizeCell;
-			roundX = Math.round(x);
-			if(x == roundX){
-				character.x += character.speed*time;
-				break;
-			}
-			signe = (roundX-x)/Math.abs(roundX-x);			
-			max = (roundX*env.sizeCell)-character.position.y+env.sizeCell/2;
-			realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
-			character.y += realDistance;
-			break;
-
-			case 40:
-			x = (character.position.x-env.sizeCell/2)/env.sizeCell;
-			roundX = Math.round(x);
-			if(x == roundX){
-				character.y += character.speed*time
-				break;
-			}
-			signe = (roundX-x)/Math.abs(roundX-x);			
-			max = (roundX*env.sizeCell)-character.position.x+env.sizeCell/2;
-			realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
-			character.x += realDistance;
-			break;
-
-
-			default:
+	switch(this.nextDirection){
+		case 37:
+		x = (character.position.y-env.sizeCell/2)/env.sizeCell;
+		roundX = Math.round(x);
+		if(x == roundX){
+			character.position.x -= character.speed*time
 			break;
 		}
+		signe = (roundX-x)/Math.abs(roundX-x);			
+		max = (roundX*env.sizeCell)-character.position.y+env.sizeCell/2;
+		realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
+		character.position.y += realDistance;			
+		break;
 
-	}	
+		case 38:
+		x = (character.position.x-env.sizeCell/2)/env.sizeCell;
+		roundX = Math.round(x);
+		if(x == roundX){
+			character.position.y -= character.speed*time
+			break;
+		}
+		signe = (roundX-x)/Math.abs(roundX-x);			
+		max = (roundX*env.sizeCell)-character.position.x+env.sizeCell/2;
+		realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
+		character.position.x += realDistance;
+		break;
+
+		case 39:			
+		x = (character.position.y-env.sizeCell/2)/env.sizeCell;
+		roundX = Math.round(x);
+		if(x == roundX){
+			character.position.x += character.speed*time;
+			break;
+		}
+		signe = (roundX-x)/Math.abs(roundX-x);			
+		max = (roundX*env.sizeCell)-character.position.y+env.sizeCell/2;
+		realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
+		character.position.y += realDistance;
+		break;
+
+		case 40:
+		x = (character.position.x-env.sizeCell/2)/env.sizeCell;
+		roundX = Math.round(x);
+		if(x == roundX){
+			character.position.y += character.speed*time
+			break;
+		}
+		signe = (roundX-x)/Math.abs(roundX-x);			
+		max = (roundX*env.sizeCell)-character.position.x+env.sizeCell/2;
+		realDistance = Math.abs(signe*character.speed*time) < Math.abs(max) ? signe*character.speed*time : max;
+		character.position.x += realDistance;
+		break;
+
+
+		default:
+		break;
+	}
+
 };

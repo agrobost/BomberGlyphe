@@ -3,6 +3,8 @@ html {
 }
 body {
 	margin:0;
+	background-image: url(../images/interface/f11.png);
+	background-repeat: repeat;
 }
 #container {
 	margin: auto;
@@ -14,10 +16,13 @@ body {
 	position: absolute;
 	width: 100%;
 	bottom: 0px;
+	background-image: url(../images/interface/bordure.png);
+	background-size: 100% 100%;
 
 }
 .champion_infos {
-	background-image: url(../images/caractChampion.png);
+	position: relative;
+	background-image: url(../images/interface/caractChampion.png);
 	background-size: 100% 100%;
 	width:12.5%;
 	display: inline-block;
@@ -31,9 +36,34 @@ body {
 	width:6.25%;
 	display: inline-block;
 	vertical-align: top;
+}
+.pseudo {
+	position: absolute;
+	left: 28%;
+	top: 7%;
+	font-family: Ubuntu;
+	font-size: 1.1em;
+	font-weight: bold;
+	color: red;
+}
+.ping {
+	position: absolute;
+	left: 35%;
+	top: 39.5%;
+	font-family: Ubuntu;
+	font-size: 0.7em;
+}
+.fps {
+	position: absolute;
+	top: 26.5%;
+	left: 35%;
+	font-family: Ubuntu;
+	font-size: 0.7em;
+}
+/*
 
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
-	border: 2px solid black;*/
-}
+	border: 2px solid black;
+*/

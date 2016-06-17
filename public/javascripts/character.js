@@ -1,13 +1,18 @@
-function Character(_speed, _position, _health, _mana){
+function Character(_speed, _position, _health, _mana, _positionHtml, _pseudo){
 	this.position = _position;	
 	this.speed = _speed;
 	this.health = _health;
 	this.mana = _mana;
 	this.movementCharacter = new MovementCharacter(this);
+	this.positionHtml = _positionHtml;
+	this.pseudo = _pseudo;
+	this.debug = {x:0,y:0};
+
+	$("#pseudo"+this.positionHtml).html(_pseudo);
 	
 }
 Character.sprite = new Image();
-Character.sprite.src = '../images/sprite1.png';
+Character.sprite.src = '../images/sprites/littleGirl.png';
 
 Character.prototype.showCurrentCell = function(ctx, canvas){
 	var coord = {x:Math.round((this.position.x-env.sizeCell/2)/env.sizeCell),y:Math.round((this.position.y-env.sizeCell/2)/env.sizeCell)};
@@ -22,8 +27,10 @@ Character.prototype.draw = function(ctx, canvas, time){
 	this.movementCharacter.update(time);	
 	ctx.drawImage(Character.sprite,(192/3)*this.movementCharacter.columnSprite,(256/4)*this.movementCharacter.lineSprite,(192/3),(256/4),this.position.x-env.sizeCell/2,this.position.y-env.sizeCell/2,env.sizeCell,env.sizeCell);
 
+ctx.fillStyle="#262626";
+	ctx.fillRect(this.debug.x-5, this.debug.y-5,10,10);
 
-	ctx.fillStyle="#262626";
+	ctx.fillStyle="#000000";
 	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-2*env.sizeCell/7,env.sizeCell,env.sizeCell/8);
 	ctx.fillStyle="#33cc33";
 	ctx.fillRect(this.position.x-env.sizeCell/2, this.position.y-env.sizeCell/2-2*env.sizeCell/7,env.sizeCell*this.health.current/this.health.max,env.sizeCell/8);

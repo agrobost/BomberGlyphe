@@ -3,12 +3,13 @@ function ExplosionBombe(cell){
 	this.cell = cell; 
 }
 ExplosionBombe.sprite = new Image();
-ExplosionBombe.sprite.src = '../images/explosion.png';
+ExplosionBombe.sprite.src = '../images/sprites/explosion.png';
 ExplosionBombe.DUREE_ANIMATION = 1500;
 ExplosionBombe.WIDTH = 900;
 ExplosionBombe.HEIGHT = 900;
 ExplosionBombe.COLUMN = 9;
 ExplosionBombe.LINE = 9;
+ExplosionBombe.audio = new Audio('../sounds/soundBomb.wav');
 
 ExplosionBombe.prototype.draw = function(ctx, canvas, timestamp) {
 
@@ -37,6 +38,7 @@ ExplosionBombe.prototype.draw = function(ctx, canvas, timestamp) {
 	this.progress += timestamp;
 }
 ExplosionBombe.playSound = function(){
-	var audio = new Audio('../images/soundBomb.wav');
-	audio.play();
+	var a = ExplosionBombe.audio.cloneNode(true);
+
+	a.play();
 }

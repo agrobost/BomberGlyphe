@@ -24,7 +24,7 @@ socket.on('a player disconnects', function(id){
 	delete champions[id];
 });
 socket.on('initialize champion', function(data){//data=> {id:user.getSocket().id,health:health, mana:mana, speed:speed, position:position};
-	champions[data.id] = new Character(data.speed, data.position, data.health, data.mana);
+	champions[data.id] = new Character(data.speed, data.position, data.health, data.mana, data.positionHtml, data.pseudo);
 });
 socket.on('update champion',function(data){	
 	for(var ref in data){
@@ -40,6 +40,7 @@ socket.on('update champion',function(data){
 			continue;			
 		}
 		champions[data.id][ref] = data[ref];
+
 	}
 });
 
@@ -49,8 +50,12 @@ socket.on('pinguage', function(){
 	fps.nb = 0;
 	socket.emit("ponguage", rate);
 });
-socket.on('ping fps', function(data){//{id:socket.id,fps:fps, ping:ping};
-	console.log("fps:"+data.fps+", ping:"+data.ping);
+socket.on('ping fps', function(data){
+	var position = champions[data.id].positionHtml;
+	var ping = "ping"+position;
+	var fps = "fps"+position;
+	$("#"+ping).html("ping : "+data.ping+"ms");
+	$("#"+fps).html("fps : "+Math.round(data.fps)+"f/s");
 });
 
 $(document).keydown(function(e){

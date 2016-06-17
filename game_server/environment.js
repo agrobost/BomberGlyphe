@@ -23,9 +23,9 @@ Environment.prototype.initialize = function(){
 		this.map[i] = [];
 		for(var j=0;j<this.numberLine;j++){
 			random = Math.random();
-			if(random<0.33/4){
+			if(random<0.25){
 				this.map[i][j] = {type:"brique"};
-			}else if(random<0.66/4){
+			}else if(random<0.50){
 				this.map[i][j] = {type:"bois"};
 			}else{
 				this.map[i][j] = {type:"empty"};
@@ -48,12 +48,3 @@ Environment.prototype.cellBelongToMap = function(cell){
 		return false;
 	}
 };
-/*
-for(i=0;i<numberColumn;i++){
-map[i][0] = {type:"bedrock"};
-map[i][numberLine-1] = {type:"bedrock"};
-}
-for(j=0;j<numberLine;j++){
-map[0][j] = {type:"bedrock"};
-map[numberColumn-1][j] = {type:"bedrock"};
-}*/

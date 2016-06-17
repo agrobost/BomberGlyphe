@@ -8,7 +8,7 @@ var bomb = function(_personnage, cell){
 	var pos = {x:cell.x*env.sizeCell+env.sizeCell/2,y:cell.y*env.sizeCell+env.sizeCell/2};
 	var timerExplosion;
 	env.map[cell.x][cell.y] = {type:"bomb",position:{x:pos.x,y:pos.y}};	
-	var rangeBomb = 5;
+
 
 	//on met a jour la map car une bombe vient d'etre posé
 	personnage.io.sockets.in(personnage.refGame).emit("modify cell", {i:cell.x, j:cell.y, value:env.map[cell.x][cell.y]});
@@ -16,6 +16,7 @@ var bomb = function(_personnage, cell){
 	
 
 	this.explosion = function(){
+		personnage.nbCurrentBomb--;
 		clearTimeout(timerExplosion);
 		var cellAffected = {};
 		var j = 1;
@@ -44,10 +45,10 @@ var bomb = function(_personnage, cell){
 
 
 			j++;
-			if(j<rangeBomb){
+			if(j<personnage.powder){
 				setTimeout(test,50);
-				for(var ref in personnage.gameClassic.players){
-					var player = personnage.gameClassic.players[ref];
+				for(var ref in personnage.gameClassic.characters){
+					var player = personnage.gameClassic.characters[ref];
 					var pos = player.getCell();
 					if(cellAffected[pos.x+"/"+pos.y]!=undefined){
 						player.health.current -= 500;
@@ -65,7 +66,7 @@ var bomb = function(_personnage, cell){
 
 		function toDo(cellAffected, x, y, map){
 
-			if(env.map[x][y]["type"] == "brique" || env.map[x][y]["type"] == "bois" || env.map[x][y]["type"] == "bedrock"){
+			if(env.map[x][y]["type"] == "brique" || env.map[x][y]["type"] == "bois"){
 				var etendre = true;
 			}else{
 				var etendre = false;
@@ -73,24 +74,38 @@ var bomb = function(_personnage, cell){
 
 			cellAffected[x+"/"+y] = env.map[x][y];
 
-			if(env.map[x][y]["type"] == "bois" || env.map[x][y]["type"] == "bomb" || env.map[x][y]["type"] == "empty"){
+			if(env.map[x][y]["type"] == "bomb"){
 				if(!(x==cell.x && y ==cell.y) && env.map[x][y]["type"] == "bomb"){
-					for(var ref in personnage.gameClassic.players){
-						if(personnage.gameClassic.players[ref].bomb[x+"/"+y]!=undefined) {
-							personnage.gameClassic.players[ref].bomb[x+"/"+y].explosion();
-							delete personnage.gameClassic.players[ref].bomb[x+"/"+y];
+					for(var ref in personnage.gameClassic.characters){
+						if(personnage.gameClassic.characters[ref].bomb[x+"/"+y]!=undefined) {
+							personnage.gameClassic.characters[ref].bomb[x+"/"+y].explosion();
+							delete personnage.gameClassic.characters[ref].bomb[x+"/"+y];
 						}
 					}
 				}
 				env.map[x][y]["type"] = "empty";	
+				personnage.io.sockets.in(personnage.refGame).emit("modify cell", {i:x, j:y, value:env.map[x][y]});					
+			}else if(env.map[x][y]["type"] == "bois"){				
+				random = Math.random();
+				if(random<0.25){
+					env.map[x][y]["type"] = "bonusPowder";	
+				}else if(random<0.50){
+					env.map[x][y]["type"] = "bonusSpeed";	
+				}else if(random<0.75){
+					env.map[x][y]["type"] = "bonusBomb";	
+				}else{
+					env.map[x][y]["type"] = "empty";	
+				}
 				personnage.io.sockets.in(personnage.refGame).emit("modify cell", {i:x, j:y, value:env.map[x][y]});	
-				personnage.io.sockets.in(personnage.refGame).emit("explosion bomb", {x:x,y:y});						
-			}
-			return etendre;
+			}else if(env.map[x][y]["type"] == "bonusPowder" || env.map[x][y]["type"] == "bonusSpeed" || env.map[x][y]["type"] == "bonusBomb"){
+				env.map[x][y]["type"] = "empty";	
+				personnage.io.sockets.in(personnage.refGame).emit("modify cell", {i:x, j:y, value:env.map[x][y]});	
+			}else{}
 			
+			personnage.io.sockets.in(personnage.refGame).emit("explosion bomb", {x:x,y:y});		
+
+			return etendre;			
 		}
-
-
 	};
 
 	timerExplosion = setTimeout(that.explosion,3000);
