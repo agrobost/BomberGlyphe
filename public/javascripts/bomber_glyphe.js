@@ -81,28 +81,28 @@ function draw(timestamp){
 			ctx.rect(i*env.sizeCell,j*env.sizeCell,env.sizeCell,env.sizeCell);
 			ctx.stroke();
 			switch(env.map[i][j]["type"]){
-				case "brique":
+				case "brick":
 				ctx.drawImage(brique,i*env.sizeCell,j*env.sizeCell,env.sizeCell,env.sizeCell);
 				break;
 
-				case "bois":
+				case "wood":
 				ctx.drawImage(bois,i*env.sizeCell,j*env.sizeCell,env.sizeCell,env.sizeCell);
 				break;
 
 				case "bomb":
-				ctx.drawImage(bombe,env.map[i][j]["position"]["x"]-env.sizeCell/2,env.map[i][j]["position"]["y"]-env.sizeCell/2,env.sizeCell,env.sizeCell);
-				break;
+				ctx.drawImage(bombe,i*env.sizeCell,j*env.sizeCell,env.sizeCell,env.sizeCell);
+                    break;
 
-				case "bonusBomb":
+				case "extra_bomb":
 				ctx.drawImage(bonusBomb,i*env.sizeCell,j*env.sizeCell,env.sizeCell,env.sizeCell);				
 				break;
 
-				case "bonusSpeed":			
+				case "speed":
 				ctx.drawImage(bonusSpeed,i*env.sizeCell,j*env.sizeCell,env.sizeCell,env.sizeCell);	
 
 				break;
 
-				case "bonusPowder":
+				case "powder":
 				ctx.drawImage(bonusPowder,i*env.sizeCell,j*env.sizeCell,env.sizeCell,env.sizeCell);				
 				break;
 
@@ -111,7 +111,7 @@ function draw(timestamp){
 			}			
 		}
 	}
-	if(champions[sessionStorage.id]!=undefined){
+	if(champions[sessionStorage.id]!==undefined){
 		champions[sessionStorage.id].showCurrentCell(ctx, canvas);
 	}
 	

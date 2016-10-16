@@ -1,0 +1,5 @@
+projectKey=agrum.lab:bomberglyphe
+serverUrl=http://localhost:9000
+dashboardUrl=http://localhost:9000/dashboard/index/agrum.lab:bomberglyphe
+ceTaskId=AVe0cCHV9tTFu97zoefo
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AVe0cCHV9tTFu97zoefo

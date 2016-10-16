@@ -21,13 +21,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
 io.on("connection", function(socket){
-  socket.on("client sends pseudo to server", function(pseudo){
-    userManager.addUser(socket, pseudo);
-  });  
-  socket.on('disconnect', function(){
-    console.log("le client est déconnecté");
-    userManager.deleteUser(socket.id);
-  });
+    "use strict";
+    socket.on("client sends pseudo to server", function(pseudo){
+        userManager.addUser(socket, pseudo);
+    });
+    socket.on('disconnect', function(){
+        console.log("Le client est déconnecté");
+        userManager.deleteUser(socket.id);
+    });
 });
 
 module.exports = app;
