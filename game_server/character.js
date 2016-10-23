@@ -1,9 +1,9 @@
 var MovementCharacter = require("./MovementCharacter.js");
+var BasicCell = require("./cell/Basic.js");
+module.exports = Character;
 
-
-var character = function (user, sio, refGame, gameClassic, positionHtml) {
+function Character(user, sio, refGame, gameClassic, positionHtml) {
     "use strict";
-
     this.io = sio;
     this.user = user;
     this.refGame = refGame;
@@ -19,97 +19,55 @@ var character = function (user, sio, refGame, gameClassic, positionHtml) {
     this.nbMaxBomb = 1;
     this.nbCurrentBomb = 0;
     this.powder = 2;
-
-    var that = this;
-    var env = this.gameClassic.env;
     var bombManager = this.gameClassic.bombManager;
 
-    var timer = setInterval(function () {
-        var someHealth = that.health.regeneration * 200 / 1000;
-        var someMana = that.mana.regeneration * 200 / 1000;
+    this.timer = setInterval(function () {
+        var someHealth = this.health.regeneration * 200 / 1000;
+        var someMana = this.mana.regeneration * 200 / 1000;
 
-        if (that.health.current + someHealth > that.health.max) {
-            that.health.current = that.health.max;
+        if (this.health.current + someHealth > this.health.max) {
+            this.health.current = this.health.max;
         } else {
-            that.health.current += someHealth;
+            this.health.current += someHealth;
         }
-        if (that.mana.current + someMana > that.mana.max) {
-            that.mana.current = that.mana.max;
+        if (this.mana.current + someMana > this.mana.max) {
+            this.mana.current = this.mana.max;
         } else {
-            that.mana.current += someMana;
+            this.mana.current += someMana;
         }
 
-        that.io.sockets.in(that.refGame).emit('update champion', {
-            id: that.user.socket.id,
-            health: that.health,
-            mana: that.mana
+        this.io.sockets.in(this.refGame).emit('update champion', {
+            id: this.user.socket.id,
+            health: this.health,
+            mana: this.mana
         });
-    }, 200);
-
-    this.stopInterval = function () {
-        clearInterval(timer);
-        this.deplacement.stopInterval();
-    };
-
-    this.toObject = function () {
-        return {
-            id: that.user.socket.id,
-            health: that.health,
-            mana: that.mana,
-            speed: that.speed,
-            position: that.position,
-            positionHtml: that.positionHtml,
-            pseudo: that.user.pseudo
-        };
-    };
+    }.bind(this), 200);
 
     this.user.socket.on("space down", function () {
-        bombManager.dropBomb(that);
-    });
+        bombManager.addBomb(this);
+    }.bind(this));
+}
 
-    this.getCell = function () {
+Character.prototype = {
+    getCell: function (pixelX, pixelY) {
+        "use strict";
+        return this.gameClassic.env.getCell(pixelX, pixelY);
+    },
+    stopInterval: function () {
+        "use strict";
+        clearInterval(this.timer);
+        this.deplacement.stopInterval();
+    },
+    toObject: function () {
+        "use strict";
         return {
-            x: Math.round((this.position.x - env.sizeCell / 2) / env.sizeCell),
-            y: Math.round((this.position.y - env.sizeCell / 2) / env.sizeCell)
+            id: this.user.socket.id,
+            health: this.health,
+            mana: this.mana,
+            speed: this.speed,
+            position: this.position,
+            positionHtml: this.positionHtml,
+            pseudo: this.user.pseudo
         };
-    };
-    this.checkBonus = function () {
-        var cell = this.getCell();
-        switch (this.gameClassic.env.map[cell.x][cell.y]["type"]) {
-            case "bonusPowder":
-                if (that.powder >= 5) {
-                    resetCell();
-                    break;
-                }
-                that.powder++;
-                resetCell();
-                break;
-
-            case "bonusSpeed":
-                if (that.speed >= 0.300) {
-                    resetCell();
-                    break;
-                }
-                that.speed += 0.100;
-                that.io.sockets.in(that.refGame).emit('update champion', {id: that.user.socket.id, speed: that.speed});
-                resetCell();
-                break;
-
-            case "bonusBomb":
-                that.nbMaxBomb++;
-                resetCell();
-                break;
-        }
-        function resetCell() {
-            that.gameClassic.env.map[cell.x][cell.y]["type"] = "empty";
-            that.io.sockets.in(that.refGame).emit("modify cell", {
-                i: cell.x,
-                j: cell.y,
-                value: env.map[cell.x][cell.y]
-            });
-        }
-
-    };
+    }
 };
-
-module.exports = character;

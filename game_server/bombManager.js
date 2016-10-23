@@ -1,26 +1,29 @@
-var Bomb = require("./bomb.js");
+//var Bomb2 = require("./bomb.js");
+module.exports = BombManager;
 
-var bombManager = function () {
-    this.dropBomb = function (personnage) {
-        var env = personnage.gameClassic.env;
-        if (personnage.mana.current < 20) {
+function BombManager() {
+    this.mana = 20;
+}
+
+BombManager.prototype = {
+    addBomb: function (character) {
+        "use strict";
+        var env = character.gameClassic.env;
+        var cell = env.getCell(character.position.x, character.position.y);
+        if (cell && cell.type !== "empty") {
             return;
         }
-        var cell = {
-            x: Math.round((personnage.position.x - env.sizeCell / 2) / env.sizeCell),
-            y: Math.round((personnage.position.y - env.sizeCell / 2) / env.sizeCell)
-        };
-        if (env.map[cell.x][cell.y]["type"] !== "empty") {
-            return
-        }
-        if (personnage.nbCurrentBomb >= personnage.nbMaxBomb) {
+        if (character.mana.current < 20) {
             return;
         }
-        personnage.mana.current -= 20;
+        if (character.nbCurrentBomb >= character.nbMaxBomb) {
+            return;
 
-        var bomb = new Bomb(personnage, cell);
-        personnage.nbCurrentBomb++;
-    };
+        }
+        character.mana.current -= this.mana;
+        character.nbCurrentBomb++;
+        //new Bomb2(character, cell);
+    }
 };
 
-module.exports = bombManager;
+

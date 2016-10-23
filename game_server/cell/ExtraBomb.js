@@ -1,7 +1,7 @@
 var Basic = require("./Basic.js");
 module.exports = ExtraBomb;
 
-function ExtraBomb(column, line){
+function ExtraBomb(column, line) {
     "use strict";
     Basic.call(this, column, line);
     this.type = "extra_bomb";

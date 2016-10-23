@@ -18,8 +18,6 @@ socket.on("explosion bomb", function(data){//{x:x,y:y}
 socket.on('sound explosion bomb', function(){
 	ExplosionBombe.playSound();
 });
-
-
 socket.on('a player disconnects', function(id){
 	delete champions[id];
 });

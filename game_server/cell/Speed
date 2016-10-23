@@ -1,7 +1,7 @@
 var Basic = require("./Basic.js");
 module.exports = Speed;
 
-function Speed(column, line){
+function Speed(column, line) {
     "use strict";
     Basic.call(this, column, line);
     this.type = "speed";

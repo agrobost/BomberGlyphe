@@ -1,32 +1,32 @@
 module.exports = MovementCharacter;
 
-function MovementCharacter(character){
+function MovementCharacter(character) {
     "use strict";
     var RATE = 10;
     var nextDirection = -1;
     var env = character.gameClassic.env;
-    var currentCell = env.getCell(character.position);
-    var updateClient = true;
+    var currentCell = character.getCell();
+    var updateClient = false;
 
-    var updatePosition = function(nextCell, nextPosition){
-        if(nextCell.isWalkable() || nextCell === currentCell){
+    var updatePosition = function (nextCell, nextPosition) {
+        if (nextCell.isWalkable() || nextCell === currentCell) {
             character.orientation = 37;
             character.position.x = nextPosition.x;
             character.position.y = nextPosition.y;
-            character.checkBonus();
+            //character.checkBonus();
 
-            if(nextCell !== currentCell){
+            if (nextCell !== currentCell) {
                 //nextCell.applyEffect(character);
                 currentCell = nextCell;
             }
-            if(!updateClient){
+            if (!updateClient) {
                 updateClient = true;
                 character.io.sockets.in(character.refGame).emit("update champion", {
                     id: character.user.socket.id,
                     hasBeenChanged: updateClient
                 });
             }
-        }else{
+        } else {
             updateClient = false;
             character.io.sockets.in(character.refGame).emit("update champion", {
                 id: character.user.socket.id,
@@ -36,7 +36,7 @@ function MovementCharacter(character){
     };
     var findNextPosition_left = function (nextPosition) {
         var nextCell;
-        (function(){
+        (function () {
             var x, roundX, sign, max, realDistance;
             x = (character.position.y - env.sizeCell / 2) / env.sizeCell;
             roundX = Math.round(x);
@@ -49,12 +49,12 @@ function MovementCharacter(character){
                 nextPosition.y += realDistance;
             }
         })();
-        nextCell = env.getCell(nextPosition.x - env.sizeCell/2, nextPosition.y);
+        nextCell = env.getCell(nextPosition.x - env.sizeCell / 2, nextPosition.y);
         updatePosition(nextCell, nextPosition);
     };
     var findNextPosition_top = function (nextPosition) {
         var nextCell;
-        (function(){
+        (function () {
             var x, roundX, sign, max, realDistance;
             x = (character.position.x - env.sizeCell / 2) / env.sizeCell;
             roundX = Math.round(x);
@@ -68,52 +68,51 @@ function MovementCharacter(character){
                 nextPosition.x += realDistance;
             }
         })();
-        nextCell = env.getCell(nextPosition.x, nextPosition.y- env.sizeCell/2);
+        nextCell = env.getCell(nextPosition.x, nextPosition.y - env.sizeCell / 2);
         updatePosition(nextCell, nextPosition);
     };
     var findNextPosition_right = function (nextPosition) {
         var nextCell;
-        (function(){
+        (function () {
             var x, roundX, sign, max, realDistance;
             x = (character.position.y - env.sizeCell / 2) / env.sizeCell;
             roundX = Math.round(x);
             if (x === roundX) {
                 nextPosition.x += character.speed * RATE;
 
-            }else {
+            } else {
                 sign = (roundX - x) / Math.abs(roundX - x);
                 max = (roundX * env.sizeCell) - character.position.y + env.sizeCell / 2;
                 realDistance = Math.abs(sign * character.speed * RATE) < Math.abs(max) ? sign * character.speed * RATE : max;
                 nextPosition.y += realDistance;
             }
         })();
-        nextCell = env.getCell(nextPosition.x + env.sizeCell/2, nextPosition.y);
+        nextCell = env.getCell(nextPosition.x + env.sizeCell / 2, nextPosition.y);
         updatePosition(nextCell, nextPosition);
     };
     var findNextPosition_bottom = function (nextPosition) {
         var nextCell;
-        (function(){
+        (function () {
             var x, roundX, sign, max, realDistance;
             x = (character.position.x - env.sizeCell / 2) / env.sizeCell;
             roundX = Math.round(x);
             if (x === roundX) {
                 nextPosition.y += character.speed * RATE;
 
-            }else {
+            } else {
                 sign = (roundX - x) / Math.abs(roundX - x);
                 max = (roundX * env.sizeCell) - character.position.x + env.sizeCell / 2;
                 realDistance = Math.abs(sign * character.speed * RATE) < Math.abs(max) ? sign * character.speed * RATE : max;
                 nextPosition.x += realDistance;
             }
         })();
-        nextCell = env.getCell(nextPosition.x, nextPosition.y + env.sizeCell/2);
+        nextCell = env.getCell(nextPosition.x, nextPosition.y + env.sizeCell / 2);
         updatePosition(nextCell, nextPosition);
     };
 
-
     var timer = setInterval(function () {
         var nextPosition = Object.assign({}, character.position);
-        switch (nextDirection){
+        switch (nextDirection) {
             case 37:
                 findNextPosition_left(nextPosition);
                 break;
@@ -127,7 +126,7 @@ function MovementCharacter(character){
                 findNextPosition_bottom(nextPosition);
                 break;
         }
-    },RATE);
+    }, RATE);
 
     var timer2 = setInterval(function () {
         character.io.sockets.in(character.refGame).emit("update champion", {
@@ -139,7 +138,6 @@ function MovementCharacter(character){
             debug: character.position
         });
     }, 200);
-
 
     this.stopInterval = function () {
         clearInterval(timer);

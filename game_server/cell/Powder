@@ -1,7 +1,7 @@
 var Basic = require("./Basic.js");
 module.exports = Powder;
 
-function Powder(column, line){
+function Powder(column, line) {
     "use strict";
     Basic.call(this, column, line);
     this.type = "powder";

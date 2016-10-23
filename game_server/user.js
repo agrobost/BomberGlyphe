@@ -6,44 +6,44 @@ function User(socket, pseudo, gameManager, io) {
     this.gameManager = gameManager;
     this.pseudo = pseudo;
     this.socket = socket;
-    this.timeLastPing = undefined;
     this.ping = 0;
     this.fps = 0;
     this.game = null;
-    var that = this;
-
 
     this.socket.on('client want find a classic game', function () {
-        if (that.game == null) {
-            that.gameManager.joinClassicGame(that);
-        } else {
-            console.log("Le client est deja dans une partie");
+        if (this.game === null) {
+            this.gameManager.joinClassicGame(this);
         }
-    });
+    }.bind(this));
 
+    (function (user) {
+        var timeLastPing;
+        user.timerPing = setInterval(function () {
+            timeLastPing = Date.now();
+            user.socket.emit("pinguage");
+        }.bind(user), 1000);
+
+        user.socket.on("ponguage", function (fps) {
+            user.ping = Date.now() - timeLastPing;
+            user.fps = fps;
+            if (user.game) {
+                user.io.sockets.in(user.game.refGame).emit('ping fps', {fps: fps, ping: this.ping, id: user.socket.id});
+            }
+        }.bind(user));
+    })(this);
 }
 
-User.prototype.disconnect = function () {
-    "use strict";
-    if (this.game !== undefined) {
-        this.game.deletePlayer(this.socket.id);
+User.prototype = {
+    disconnect: function () {
+        "use strict";
+        clearInterval(this.timerPing);
+        if (this.game !== null) {
+            this.game.deleteUser(this.socket.id);
+        }
     }
 };
 
-User.prototype.pinguer = function () {
-    "use strict";
-    this.timeLastPing = Date.now();
-};
 
-User.prototype.ponguer = function () {
-    "use strict";
-    this.ping = Date.now() - this.timeLastPing;
-};
-
-User.prototype.tt = function () {
-    "user strict";
-    console.log("tetar");
-};
 
 
 

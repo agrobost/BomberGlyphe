@@ -1,7 +1,7 @@
 var Basic = require("./Basic.js");
 module.exports = BrickCell;
 
-function BrickCell(column, line){
+function BrickCell(column, line) {
     "use strict";
     Basic.call(this, column, line);
     this.type = "brick";
