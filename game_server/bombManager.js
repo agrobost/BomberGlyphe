@@ -8,8 +8,8 @@ function BombManager() {
 BombManager.prototype = {
     addBomb: function (character) {
         "use strict";
-        var env = character.gameClassic.env;
-        var cell = env.getCell(character.position.x, character.position.y);
+        var scene = character.gameClassic.scene;
+        var cell = scene.getCell(character.position.x, character.position.y);
         if (cell && cell.type !== "empty") {
             return;
         }

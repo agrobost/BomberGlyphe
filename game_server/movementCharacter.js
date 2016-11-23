@@ -4,21 +4,18 @@ function MovementCharacter(character) {
     "use strict";
     var RATE = 10;
     var nextDirection = -1;
-    var env = character.gameClassic.env;
-    var currentCell = character.getCell();
+    var scene = character.scene;
     var updateClient = false;
 
-    var updatePosition = function (nextCell, nextPosition) {
-        if (nextCell.isWalkable() || nextCell === currentCell) {
-            character.orientation = 37;
+    var updatePosition = function (nextCellObject, nextPosition) {
+        if (nextCellObject && nextCellObject.isWalkable()) {
+            var currentCell = character.getCell();
+            var nextCell = scene.getCell(nextPosition);
+            if (nextCell.column !== currentCell.column || nextCell.line !== currentCell.line) {
+                character.notify({previousCell:currentCell, currentCell:nextCell});
+            }
             character.position.x = nextPosition.x;
             character.position.y = nextPosition.y;
-            //character.checkBonus();
-
-            if (nextCell !== currentCell) {
-                //nextCell.applyEffect(character);
-                currentCell = nextCell;
-            }
             if (!updateClient) {
                 updateClient = true;
                 character.io.sockets.in(character.refGame).emit("update champion", {
@@ -35,83 +32,87 @@ function MovementCharacter(character) {
         }
     };
     var findNextPosition_left = function (nextPosition) {
-        var nextCell;
+        var nextCellObject;
         (function () {
             var x, roundX, sign, max, realDistance;
-            x = (character.position.y - env.sizeCell / 2) / env.sizeCell;
+            x = (character.position.y - scene.sizeCell / 2) / scene.sizeCell;
             roundX = Math.round(x);
             if (x === roundX) {
                 nextPosition.x -= character.speed * RATE;
             } else {
                 sign = (roundX - x) / Math.abs(roundX - x);
-                max = (roundX * env.sizeCell) - character.position.y + env.sizeCell / 2;
+                max = (roundX * scene.sizeCell) - character.position.y + scene.sizeCell / 2;
                 realDistance = Math.abs(sign * character.speed * RATE) < Math.abs(max) ? sign * character.speed * RATE : max;
                 nextPosition.y += realDistance;
             }
         })();
-        nextCell = env.getCell(nextPosition.x - env.sizeCell / 2, nextPosition.y);
-        updatePosition(nextCell, nextPosition);
+        var nextPositionLeft = {x:nextPosition.x - scene.sizeCell / 2,y:nextPosition.y};
+        nextCellObject = scene.getCellObject(nextPositionLeft);
+        updatePosition(nextCellObject, nextPosition);
     };
     var findNextPosition_top = function (nextPosition) {
-        var nextCell;
+        var nextCellObject;
         (function () {
             var x, roundX, sign, max, realDistance;
-            x = (character.position.x - env.sizeCell / 2) / env.sizeCell;
+            x = (character.position.x - scene.sizeCell / 2) / scene.sizeCell;
             roundX = Math.round(x);
             if (x === roundX) {
                 nextPosition.y -= character.speed * RATE;
 
             } else {
                 sign = (roundX - x) / Math.abs(roundX - x);
-                max = (roundX * env.sizeCell) - character.position.x + env.sizeCell / 2;
+                max = (roundX * scene.sizeCell) - character.position.x + scene.sizeCell / 2;
                 realDistance = Math.abs(sign * character.speed * RATE) < Math.abs(max) ? sign * character.speed * RATE : max;
                 nextPosition.x += realDistance;
             }
         })();
-        nextCell = env.getCell(nextPosition.x, nextPosition.y - env.sizeCell / 2);
-        updatePosition(nextCell, nextPosition);
+        var nextPositionTop = {x:nextPosition.x,y:nextPosition.y - scene.sizeCell / 2};
+        nextCellObject = scene.getCellObject(nextPositionTop);
+        updatePosition(nextCellObject, nextPosition);
     };
     var findNextPosition_right = function (nextPosition) {
-        var nextCell;
+        var nextCellObject;
         (function () {
             var x, roundX, sign, max, realDistance;
-            x = (character.position.y - env.sizeCell / 2) / env.sizeCell;
+            x = (character.position.y - scene.sizeCell / 2) / scene.sizeCell;
             roundX = Math.round(x);
             if (x === roundX) {
                 nextPosition.x += character.speed * RATE;
 
             } else {
                 sign = (roundX - x) / Math.abs(roundX - x);
-                max = (roundX * env.sizeCell) - character.position.y + env.sizeCell / 2;
+                max = (roundX * scene.sizeCell) - character.position.y + scene.sizeCell / 2;
                 realDistance = Math.abs(sign * character.speed * RATE) < Math.abs(max) ? sign * character.speed * RATE : max;
                 nextPosition.y += realDistance;
             }
         })();
-        nextCell = env.getCell(nextPosition.x + env.sizeCell / 2, nextPosition.y);
-        updatePosition(nextCell, nextPosition);
+        var nextPositionRight = {x:nextPosition.x + scene.sizeCell / 2,y:nextPosition.y};
+        nextCellObject = scene.getCellObject(nextPositionRight);
+        updatePosition(nextCellObject, nextPosition);
     };
     var findNextPosition_bottom = function (nextPosition) {
-        var nextCell;
+        var nextCellObject;
         (function () {
             var x, roundX, sign, max, realDistance;
-            x = (character.position.x - env.sizeCell / 2) / env.sizeCell;
+            x = (character.position.x - scene.sizeCell / 2) / scene.sizeCell;
             roundX = Math.round(x);
             if (x === roundX) {
                 nextPosition.y += character.speed * RATE;
 
             } else {
                 sign = (roundX - x) / Math.abs(roundX - x);
-                max = (roundX * env.sizeCell) - character.position.x + env.sizeCell / 2;
+                max = (roundX * scene.sizeCell) - character.position.x + scene.sizeCell / 2;
                 realDistance = Math.abs(sign * character.speed * RATE) < Math.abs(max) ? sign * character.speed * RATE : max;
                 nextPosition.x += realDistance;
             }
         })();
-        nextCell = env.getCell(nextPosition.x, nextPosition.y + env.sizeCell / 2);
-        updatePosition(nextCell, nextPosition);
+        var nextPositionBottom = {x:nextPosition.x,y:nextPosition.y + scene.sizeCell / 2};
+        nextCellObject = scene.getCellObject(nextPositionBottom);
+        updatePosition(nextCellObject, nextPosition);
     };
 
     var timer = setInterval(function () {
-        var nextPosition = Object.assign({}, character.position);
+        var nextPosition = Object.create(character.position);
         switch (nextDirection) {
             case 37:
                 findNextPosition_left(nextPosition);
@@ -143,7 +144,6 @@ function MovementCharacter(character) {
         clearInterval(timer);
         clearInterval(timer2);
     };
-
     character.user.socket.on("next direction", function (nd) {
         nextDirection = nd;
         character.io.sockets.in(character.refGame).emit("update champion", {
@@ -151,4 +151,4 @@ function MovementCharacter(character) {
             nextDirection: nextDirection
         });
     });
-};
+}

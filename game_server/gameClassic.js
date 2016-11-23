@@ -1,6 +1,6 @@
-var Character = require("./character.js");
+var Character = require("./GameObject/character.js");
 var BombManager = require("./bombManager.js");
-var Environment = require("./environment.js");
+var Scene = require("./scene.js");
 module.exports = GameClassic;
 
 function GameClassic(io, refGame) {
@@ -8,9 +8,8 @@ function GameClassic(io, refGame) {
     this.refGame = refGame;
     this.io = io;
     this.characters = {};
-    this.env = new Environment();
+    this.scene = new Scene();
     this.bombManager = new BombManager();
-    this.timerPing = undefined;
 }
 
 GameClassic.prototype = {
@@ -20,11 +19,11 @@ GameClassic.prototype = {
             return false;
         }
         user.socket.join(this.refGame);
-        user.socket.emit("server sends game env to client", {
-            map: this.env.map,
-            numberColumn: this.env.numberColumn,
-            numberLine: this.env.numberLine,
-            sizeCell: this.env.sizeCell
+        user.socket.emit("server sends game scene to client", {
+            map: this.scene.map,
+            numberColumn: this.scene.numberColumn,
+            numberLine: this.scene.numberLine,
+            sizeCell: this.scene.sizeCell
         });
 
         user.game = this;

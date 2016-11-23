@@ -5,7 +5,7 @@ socket.on('connect', function(){
 	socket.emit('client want find a classic game');
 
 });
-socket.on("server sends game env to client", function(environment){
+socket.on("server sends game scene to client", function(environment){
 	env = environment;
 	requestAnimationFrame(draw);
 });
@@ -21,7 +21,7 @@ socket.on('sound explosion bomb', function(){
 socket.on('a player disconnects', function(id){
 	delete champions[id];
 });
-socket.on('initialize champion', function(data){//data=> {id:user.getSocket().id,health:health, mana:mana, speed:speed, position:position};
+socket.on('initialize champion', function(data){//data=> {id:user.getSocket().id,health:health, mana:mana, speed.js:speed.js, position:position};
 	champions[data.id] = new Character(data.speed, data.position, data.health, data.mana, data.positionHtml, data.pseudo);
 });
 socket.on('update champion',function(data){	

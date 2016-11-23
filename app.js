@@ -10,7 +10,7 @@ var GameManager = require("./game_server/gameManager.js");
 var UserManager = require("./game_server/userManager.js");
 var gameManager = new GameManager(io);
 var userManager = new UserManager(io, gameManager);
-
+var mongoose = require('mongoose');
 
 
 app.set('views', path.join(__dirname, 'views'));

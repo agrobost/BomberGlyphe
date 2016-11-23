@@ -1,4 +1,4 @@
-function ExplosionBombe(cell){
+unction ExplosionBombe(cell){
 	this.progress = 0;
 	this.cell = cell; 
 }
@@ -29,7 +29,7 @@ ExplosionBombe.prototype.draw = function(ctx, canvas, timestamp) {
 	pourcentage = this.progress / ExplosionBombe.DUREE_ANIMATION;
 	numero = Math.round(pourcentage*column*line);
 	i = numero%column;
-	j = Math.floor(numero/column);
+	j = Mth.floor(numero/column);
 	
 
 	ctx.drawImage(ExplosionBombe.sprite,(width/column)*i,(height/line)*j,width/column,height/line,this.cell.x*env.sizeCell,this.cell.y*env.sizeCell,env.sizeCell,env.sizeCell);
