@@ -1,4 +1,4 @@
-var Basic = require("./Basic.js");
+var Basic = require("./basic.js");
 module.exports = WoodCell;
 
 function WoodCell(column, line) {

@@ -48,3 +48,7 @@ Temporary Items
 .idea
 .sonar
 example
+node_modules
+example
+.sonar
+.idea
